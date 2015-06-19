@@ -16,6 +16,17 @@ import retrofit.http.Query;
 import rx.Observable;
 import rx.functions.Func1;
 
+/**
+ * 1、retrofit 默认引入gson
+ * 2、如果工程引用 okhttp，则默认使用okhttp
+ * 3、每个函数可以定义为异步或者同步。
+ * 具有返回值的函数为同步执行的。
+ *
+ * @GET("/user/{id}/photo") Photo listUsers(@Path("id") int id);
+ * 而异步执行函数没有返回值并且要求函数最后一个参数为Callback对象
+ * @GET("/user/{id}/photo") void listUsers(@Path("id") int id, Callback<Photo> cb);
+ * 在 Android 上，callback对象会在主(UI)线程中调用。而在普通Java应用中，callback在请求执行的线程中调用。
+ */
 public class WeatherService {
     // We are implementing against version 2.5 of the Open Weather Map web service.
     private static final String WEB_SERVICE_BASE_URL = "http://api.openweathermap.org/data/2.5";
