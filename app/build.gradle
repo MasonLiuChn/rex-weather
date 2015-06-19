@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 16
@@ -21,14 +21,22 @@ android {
         }
     }
 }
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
 
 dependencies {
-    compile 'com.android.support:support-v4:21.+'
-    compile 'io.reactivex:rxjava:1.0.+'
-    compile 'io.reactivex:rxandroid:0.23.+'
-    compile 'com.squareup.retrofit:retrofit:1.8.+'
-    compile 'com.squareup.okio:okio:1.1.+'
-    compile 'com.squareup.okhttp:okhttp:2.1.+'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.+'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    //compile 'com.android.support:support-v4:22.2.0'
+
+    compile 'io.reactivex:rxjava:1.0.12'
+    compile 'io.reactivex:rxandroid:0.24.0'
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+
+    compile 'com.github.MasonLiuChn:OkHttpPlus:1.0.1'
+
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.5@jar'
 }
