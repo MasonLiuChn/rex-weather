@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -43,9 +44,11 @@ public class LocationService {
         return Observable.create(new Observable.OnSubscribe<Location>() {
             @Override
             public void call(final Subscriber<? super Location> subscriber) {
-
+                Log.e("aaa", "Observable.OnSubscribe.call" + Thread.currentThread().getId());
                 final LocationListener locationListener = new LocationListener() {
                     public void onLocationChanged(final Location location) {
+                        Log.e("aaa", "onLocationChanged" + Thread.currentThread().getId());
+                        //执行subscriber.onNext，就会执行Observable一系列的map，至到subscriber.onNext
                         subscriber.onNext(location);
                         subscriber.onCompleted();
 

@@ -200,6 +200,7 @@ public class WeatherActivity extends Activity {
                     .flatMap(new Func1<Location, Observable<HashMap<String, WeatherForecast>>>() {
                         @Override
                         public Observable<HashMap<String, WeatherForecast>> call(final Location location) {
+                            Log.e("aaa", "flatMap.call" + Thread.currentThread().getId());
                             final WeatherService weatherService = new WeatherService();
                             final double longitude = location.getLongitude();
                             final double latitude = location.getLatitude();
@@ -208,14 +209,13 @@ public class WeatherActivity extends Activity {
                                     // Fetch current and 7 day forecasts for the location.
                                     weatherService.fetchCurrentWeather(longitude, latitude),
                                     weatherService.fetchWeatherForecasts(longitude, latitude),
-
                                     // Only handle the fetched results when both sets are available.
                                     new Func2<CurrentWeather, List<WeatherForecast>,
                                             HashMap<String, WeatherForecast>>() {
                                         @Override
                                         public HashMap call(final CurrentWeather currentWeather,
                                                             final List<WeatherForecast> weatherForecasts) {
-
+                                            Log.e("aaa", "flatMap.call.Func2.call" + Thread.currentThread().getId());
                                             HashMap weatherData = new HashMap();
                                             weatherData.put(KEY_CURRENT_WEATHER, currentWeather);
                                             weatherData.put(KEY_WEATHER_FORECASTS, weatherForecasts);
@@ -226,13 +226,15 @@ public class WeatherActivity extends Activity {
                         }
                     });
 
-            mCompositeSubscription.add(fetchDataObservable
+            mCompositeSubscription.add(
+                    fetchDataObservable
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<HashMap<String, WeatherForecast>>() {
                                 @Override
                                 public void onNext(final HashMap<String, WeatherForecast> weatherData) {
                                     // Update UI with current weather.
+                                    Log.e("aaa", "subscribe(new Subscriber).onNext" + Thread.currentThread().getId());
                                     final CurrentWeather currentWeather = (CurrentWeather) weatherData
                                             .get(KEY_CURRENT_WEATHER);
                                     mLocationNameTextView.setText(currentWeather.getLocationName());
@@ -250,12 +252,14 @@ public class WeatherActivity extends Activity {
 
                                 @Override
                                 public void onCompleted() {
+                                    Log.e("aaa", "subscribe(new Subscriber).onCompleted" + Thread.currentThread().getId());
                                     mSwipeRefreshLayout.setRefreshing(false);
                                     mAttributionTextView.setVisibility(View.VISIBLE);
                                 }
 
                                 @Override
                                 public void onError(final Throwable error) {
+                                    Log.e("aaa", "subscribe(new Subscriber).onError" + Thread.currentThread().getId());
                                     mSwipeRefreshLayout.setRefreshing(false);
 
                                     if (error instanceof TimeoutException) {
@@ -273,6 +277,7 @@ public class WeatherActivity extends Activity {
                                 }
                             })
             );
+            Log.e("aaa", "mCompositeSubscription.add" + Thread.currentThread().getId());
         }
     }
 }
